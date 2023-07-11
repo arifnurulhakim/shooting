@@ -1,11 +1,14 @@
 module.exports = {
-    HOST: "65.19.141.77",
-    USER: "jagoan_ratel",
-    PASSWORD: "RatelPlexus22!",
-    DB: "jagoan_shootingforthestars",
+    HOST: "user-prod-us-east-2-1.cluster-cfi5vnucvv3w.us-east-2.rds.amazonaws.com",
+    USER: "shooting-star-main-db-0566c731c8e780280",
+    PASSWORD: "DacHg9bCc6NERpPRAtYkNBYkxXPJe9",
+    DB: "shooting-star-main-db-0566c731c8e780280",
     dialect: "postgres",
     dialectOptions: {
-      idle_in_transaction_session_timeout: 1000
+      idle_in_transaction_session_timeout: 1000,
+       ssl: {
+          ca: fs.readFileSync(path.join(__dirname, 'path', 'root-certs.crt')),
+        },
     },
     pool: {
       max: 10,
