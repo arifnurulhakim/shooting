@@ -1,3 +1,4 @@
+const fs = require('fs');
 module.exports = {
     HOST: "user-prod-us-east-2-1.cluster-cfi5vnucvv3w.us-east-2.rds.amazonaws.com",
     USER: "shooting-star-main-db-0566c731c8e780280",
