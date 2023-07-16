@@ -8,9 +8,7 @@ module.exports = {
     dialect: "postgres",
     dialectOptions: {
       idle_in_transaction_session_timeout: 1000,
-       ssl: {
-          ca: fs.readFileSync(path.join(__dirname, 'path', 'root-certs.crt')),
-        },
+      
     },
     pool: {
       max: 10,
