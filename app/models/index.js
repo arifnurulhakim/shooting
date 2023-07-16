@@ -5,7 +5,9 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
     dialect: dbConfig.dialect,
     dialectOptions: {
         idle_in_transaction_session_timeout: dbConfig.dialectOptions.idle_in_transaction_session_timeout,
-        ssl: dbConfig.dialectOptions.ssl.ca
+        ssl: {
+            ca: fs.readFileSync(path.join(__dirname, '../config/path', 'root-certs.crt')),
+          },
     },
 
     pool: {
