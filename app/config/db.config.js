@@ -1,10 +1,14 @@
 const fs = require('fs');
 const path = require('path');
 module.exports = {
-    HOST: "user-prod-us-east-2-1.cluster-cfi5vnucvv3w.us-east-2.rds.amazonaws.com",
-    USER: "shooting-star-main-db-0566c731c8e780280",
-    PASSWORD: "DacHg9bCc6NERpPRAtYkNBYkxXPJe9",
-    DB: "shooting-star-main-db-0566c731c8e780280",
+    HOST: "database-1.caaq62uigts9.ap-southeast-1.rds.amazonaws.com",
+    USER: "postgres",
+    PASSWORD: "rqIGlz5x2iFPArVBLXIx",
+    DB: "database-1",
+    // HOST: "user-prod-us-east-2-1.cluster-cfi5vnucvv3w.us-east-2.rds.amazonaws.com",
+    // USER: "shooting-star-main-db-0566c731c8e780280",
+    // PASSWORD: "DacHg9bCc6NERpPRAtYkNBYkxXPJe9",
+    // DB: "shooting-star-main-db-0566c731c8e780280",
     dialect: "postgres",
     dialectOptions: {
       idle_in_transaction_session_timeout: 1000,
