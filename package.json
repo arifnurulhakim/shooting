@@ -10,19 +10,19 @@
   "author": "Doddi Plexus",
   "license": "ISC",
   "dependencies": {
+    "@moralisweb3/common-evm-utils": "^2.22.4",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.0",
     "cors": "^2.8.5",
     "date-fns": "^2.29.1",
-    "express": "^4.18.1",
-    "fs": "^0.0.1-security",
+    "express": "^4.18.2",
     "jsonwebtoken": "^8.5.1",
+    "moralis": "^2.22.4",
     "nodemailer": "^6.8.0",
-    "path": "^0.12.7",
     "pg": "^8.7.3",
     "pg-hstore": "^2.3.4",
     "randomstring": "^1.2.2",
-    "sequelize": "^6.32.1"
+    "sequelize": "^6.21.3"
   },
   "engines": {
     "npm": ">=8.0.0 <10.0.0",
