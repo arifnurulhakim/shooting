@@ -42,7 +42,7 @@ db.sequelize.sync()
 });*/
 
 // simple route
-app.get("/", (req, res) => {
+app.get("/plexus.jagoan.net/shooting", (req, res) => {
     res.json({ message: "Welcome to Shooting For The Stars Backend." });
 });
 
@@ -52,7 +52,7 @@ require('./app/routes/game.routes')(app);
 require('./app/routes/content.routes')(app);
 
 // set port, listen for requests
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}.`);
 });
