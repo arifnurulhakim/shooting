@@ -1,3 +1,4 @@
+const Moralis = require("moralis").default;
 const { format } = require('date-fns');
 const { sequelize } = require('../models');
 const db = require("../models");
@@ -75,8 +76,102 @@ exports.playList = async(req, res) => {
     var colName = (req.query.sort_by) ? req.query.sort_by:colName;
     const orderBy = (colName) ? colName +" "+ colDir:`play.play_time DESC`;
 
+    /* MORALIS & NFT */
+    var MORALIS_APIKEY      = "h3SHinI8snPsScr4PFUNmi2FUhgzAc2LqlYwCCL1wlJ55cZ0p7uWo4WAdrF0fbgn";
+    var NFT_TOKEN_ADDRESS   = "0x433ffa9b550f53de2031f1d62c0aeaf7639cf982";
+    var NFT_CHAIN           = "0x5";
+
+    var wherePlayerId = (idUser != '') ? ` WHERE play."playerId" = '`+idUser+`'`:``;
+    const foundPlay = await sequelize.query(
+        `SELECT player.id, player.wallet, player.name, player.tw_link, player.discord_link, play.play_time
+        FROM (
+            SELECT MAX(play.play_time) AS play_time, play."playerId" FROM plays AS play GROUP BY play."playerId"
+        ) play
+        LEFT JOIN players AS player ON player.id = play."playerId"
+        `+wherePlayerId+`
+        ORDER BY `+ orderBy +`
+		LIMIT `+ length +` OFFSET `+ start, 
+        { type: QueryTypes.SELECT }
+    );
+    const allPlay = await sequelize.query(
+        //`SELECT COUNT(id) AS play_total FROM plays`, 
+        `SELECT COUNT(DISTINCT(play."playerId")) AS play_total FROM plays AS play `+wherePlayerId, 
+        { type: QueryTypes.SELECT }
+    );
+    if (foundPlay) {
+        var listPlayerId = '';
+        for (i = 0; i < foundPlay.length; i++) {
+            listPlayerId += (listPlayerId != '') ? ', ':'';
+            listPlayerId += foundPlay[i]['id'];
+        }
+
+        const foundReward = await sequelize.query(
+            `SELECT play.reward, play."playerId" FROM plays AS play
+            WHERE play."playerId" IN (`+ listPlayerId +`)
+            ORDER BY play."playerId"`, 
+            { type: QueryTypes.SELECT }
+        );  
         
-    
+        await Moralis.start({
+            apiKey: MORALIS_APIKEY
+        });
+        
+        for (i = 0; i < foundPlay.length; i++) {
+            var tempReward = new Array();
+            for (j = 0; j < foundReward.length; j++) {
+                if (foundPlay[i]['id'] == foundReward[j]['playerId']) {
+                    tempReward.push({'image': foundReward[j]['reward'] + '.png'});
+                }
+            }
+            foundPlay[i]['reward']  = tempReward;
+            //foundPlay[j]['reward']  = [{ 'image':'123456789.png'}, { 'image':'123456789.png'}, { 'image':'123456789.png'}, { 'image':'123456789.png'}, { 'image':'123456789.png'}];
+            
+            try {
+                
+              
+                const response = await Moralis.EvmApi.nft.getWalletNFTs({
+                  "chain": NFT_CHAIN,
+                  "format": "decimal",
+                  "tokenAddresses": [
+                    NFT_TOKEN_ADDRESS
+                  ],
+                  "mediaItems": false,
+                  "address": foundPlay[i]['wallet']
+                });
+              
+                //console.log(response.raw);
+                foundPlay[i]['nft'] = response.raw;
+            } catch (e) {
+                console.error(e);
+                foundPlay[i]['nft'] = new Array();
+            }
+        }
+
+        //for (i = 0; i < foundPlay.length; i++) {
+            //foundPlay[i]['reward']  = tempReward[i];
+        //}
+        res.send({status: "SUCCESS", draw: draw, iTotalDisplayRecords: foundPlay.length, iTotalRecords: allPlay[0]['play_total'], data: foundPlay});
+
+    } else {
+        res.status(500).send({
+            message:
+            err.message || "Some error occurred while retrieving Play List."
+        });
+    }
+};
+
+// Play List
+exports.playList_BAK3 = async(req, res) => {
+    const draw = (req.query.draw) ? parseInt(req.query.draw):0;
+    const idUser = (req.query.id_user) ? req.query.id_user:"";
+    const start = (req.query.start) ? req.query.start:0;
+    const length = (req.query.length && req.query.length > 0) ? req.query.length:10;
+    const colIndex = (req.query.order && req.query.order[0]['column']) ? req.query.order[0]['column']:0;
+    var colDir = (req.query.order && req.query.order[0]['dir']) ? req.query.order[0]['dir']:"";
+    var colDir = (req.query.sort_dir) ? req.query.sort_dir:colDir;
+    var colName = (req.query.columns && req.query.columns[colIndex]['data']) ? req.query.columns[colIndex]['data']:"";
+    var colName = (req.query.sort_by) ? req.query.sort_by:colName;
+    const orderBy = (colName) ? colName +" "+ colDir:`play.play_time DESC`;
 
     var wherePlayerId = (idUser != '') ? ` WHERE play."playerId" = '`+idUser+`'`:``;
     const foundPlay = await sequelize.query(
