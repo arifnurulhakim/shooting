@@ -8,7 +8,7 @@ const QueryTypes = db.Sequelize.QueryTypes;
 /* MORALIS & NFT */
 var MORALIS_APIKEY      = "h3SHinI8snPsScr4PFUNmi2FUhgzAc2LqlYwCCL1wlJ55cZ0p7uWo4WAdrF0fbgn";
 //var NFT_TOKEN_ADDRESS   = "0x433ffa9b550f53de2031f1d62c0aeaf7639cf982";
-var NFT_TOKEN_ADDRESS   = "0x5574f062A22b67607D9e06Afd8F6BD3bBaE53E7e";
+var NFT_TOKEN_ADDRESS   = "0x10d200f6ead890f49d875c5c59fde171abe13165";
 var NFT_CHAIN           = "0x5";
 
 Moralis.start({
